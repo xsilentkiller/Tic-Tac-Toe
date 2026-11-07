@@ -1,10 +1,7 @@
 import { strategies } from './ai';
+import { otherSymbol } from './board';
 import { AIPlayer, AI_DELAY_MS, HumanPlayer } from './players';
 import type { Player, Settings, Symbol } from './types';
-
-export function otherSymbol(symbol: Symbol): Symbol {
-  return symbol === 'X' ? 'O' : 'X';
-}
 
 /** Builds the two players for the chosen mode. */
 export function createPlayers(settings: Settings, aiDelayMs = AI_DELAY_MS): Record<Symbol, Player> {

@@ -6,6 +6,10 @@ export const WIN_LINES: readonly (readonly [number, number, number])[] = [
   [0, 4, 8], [2, 4, 6], // diagonals
 ];
 
+export function otherSymbol(symbol: Symbol): Symbol {
+  return symbol === 'X' ? 'O' : 'X';
+}
+
 export function createBoard(): Board {
   return Array<null>(9).fill(null);
 }
