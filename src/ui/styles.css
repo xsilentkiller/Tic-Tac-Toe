@@ -189,3 +189,74 @@ select {
 .dialog .controls {
   justify-content: flex-end;
 }
+
+/* ---- Touch-friendly, responsive layout ---- */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
+button,
+select,
+.segment {
+  touch-action: manipulation; /* no double-tap zoom delay */
+  user-select: none;
+}
+
+/* At least 48px tall: comfortable for thumbs */
+.primary,
+.controls button,
+.controls select,
+.segment span {
+  min-height: 48px;
+}
+
+.segment span {
+  display: grid;
+  place-items: center;
+}
+
+.controls {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cell {
+  touch-action: manipulation;
+}
+
+.cell:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.screen {
+  min-height: 100dvh;
+  justify-content: center;
+}
+
+@media (max-width: 380px) {
+  .screen {
+    padding: 16px 12px;
+  }
+  .controls button,
+  .controls select {
+    padding-inline: 16px;
+  }
+}
+
+/* Short landscape phones: shrink the board so everything fits */
+@media (max-height: 560px) and (orientation: landscape) {
+  .board {
+    width: min(60vh, 260px);
+  }
+  .screen {
+    gap: 8px;
+    padding-block: 8px;
+  }
+}
