@@ -142,3 +142,18 @@ button {
 .cell.win {
   background: #fff3bf;
 }
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.options[hidden] {
+  display: none;
+}
+
+.board.locked .cell {
+  cursor: progress;
+}

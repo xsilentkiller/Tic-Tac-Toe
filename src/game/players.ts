@@ -1,4 +1,25 @@
-import type { Board, Move, Player, Symbol } from './types';
+import type { Board, Move, Player, Strategy, Symbol } from './types';
+
+export const AI_DELAY_MS = 400;
+
+/** An AI player: asks its strategy for a move after a short delay so it feels natural. */
+export class AIPlayer implements Player {
+  constructor(
+    readonly symbol: Symbol,
+    private strategy: Strategy,
+    private delayMs = AI_DELAY_MS,
+  ) {}
+
+  getMove(board: Board): Promise<Move> {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(this.strategy(board, this.symbol)), this.delayMs);
+    });
+  }
+
+  handleInput(): void {
+    // The computer ignores clicks, which also blocks input during its turn.
+  }
+}
 
 /** A human player: getMove waits until the UI forwards a click on an empty cell. */
 export class HumanPlayer implements Player {

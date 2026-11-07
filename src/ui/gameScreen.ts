@@ -8,7 +8,13 @@ export function showGameScreen(root: HTMLElement, settings: Settings, onMenu: ()
   root.replaceChildren();
 
   const screen = el('main', 'screen');
-  const title = el('h1', undefined, 'Player vs Player');
+  const title = el(
+    'h1',
+    undefined,
+    settings.mode === 'cpu'
+      ? `Vs Computer: ${settings.difficulty[0]!.toUpperCase()}${settings.difficulty.slice(1)}`
+      : 'Player vs Player',
+  );
   const status = el('p', 'status');
   status.setAttribute('aria-live', 'polite');
   const boardEl = el('div');
@@ -25,15 +31,24 @@ export function showGameScreen(root: HTMLElement, settings: Settings, onMenu: ()
 
   let game: Game | null = null;
 
+  const vsComputer = settings.mode === 'cpu';
+
   function statusText(state: GameState): string {
-    if (state.winner) return `${state.winner} wins!`;
     if (state.draw) return "It's a draw";
+    if (vsComputer) {
+      const humanTurn = state.current === settings.symbol;
+      if (state.winner) return state.winner === settings.symbol ? 'You win!' : 'Computer wins!';
+      return humanTurn ? `Your turn (${settings.symbol})` : 'Computer is thinking…';
+    }
+    if (state.winner) return `${state.winner} wins!`;
     return `${state.current}'s turn`;
   }
 
   function render(state: GameState): void {
     status.textContent = statusText(state);
     renderBoard(boardEl, state.board, (move) => game?.input(move), state.winningLine);
+    // Purely visual: the computer's player object already ignores clicks.
+    boardEl.classList.toggle('locked', vsComputer && !state.over && state.current !== settings.symbol);
   }
 
   function startRound(): void {
