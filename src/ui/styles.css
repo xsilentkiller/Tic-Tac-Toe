@@ -157,3 +157,35 @@ button {
 .board.locked .cell {
   cursor: progress;
 }
+
+.scoreboard {
+  margin: 0;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+}
+
+select {
+  font: inherit;
+  padding: 12px;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  background: #fff;
+  color: inherit;
+}
+
+.dialog {
+  border: none;
+  border-radius: 14px;
+  padding: 20px;
+  max-width: 320px;
+  background: #fff;
+  color: #222;
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.dialog .controls {
+  justify-content: flex-end;
+}
