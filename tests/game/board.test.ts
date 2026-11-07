@@ -8,7 +8,6 @@ import {
   isDraw,
   isGameOver,
   legalMoves,
-  nextSymbol,
 } from '../../src/game/board';
 import type { Board, Cell } from '../../src/game/types';
 
@@ -85,14 +84,6 @@ describe('legalMoves', () => {
 
   it('is empty on a drawn board', () => {
     expect(legalMoves(boardFrom('XOXXOOOXX'))).toEqual([]);
-  });
-});
-
-describe('nextSymbol', () => {
-  it('starts with X and alternates', () => {
-    expect(nextSymbol(createBoard())).toBe('X');
-    expect(nextSymbol(boardFrom('X........'))).toBe('O');
-    expect(nextSymbol(boardFrom('XO.......'))).toBe('X');
   });
 });
 

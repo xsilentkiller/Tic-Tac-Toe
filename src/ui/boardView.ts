@@ -5,6 +5,7 @@ export function renderBoard(
   container: HTMLElement,
   board: Board,
   onCellClick: (move: Move) => void,
+  winningLine: readonly number[] | null = null,
 ): void {
   container.replaceChildren();
   container.className = 'board';
@@ -12,6 +13,8 @@ export function renderBoard(
   board.forEach((cell, index) => {
     const button = document.createElement('button');
     button.className = 'cell';
+    if (cell) button.classList.add(cell === 'X' ? 'x' : 'o');
+    if (winningLine?.includes(index)) button.classList.add('win');
     button.type = 'button';
     button.textContent = cell ?? '';
     button.setAttribute('aria-label', `Cell ${index + 1}${cell ? `, ${cell}` : ', empty'}`);

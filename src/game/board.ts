@@ -43,13 +43,6 @@ export function isGameOver(board: Board): boolean {
   return getWinner(board) !== null || isDraw(board);
 }
 
-/** X always moves first, so whose turn it is follows from the piece counts. */
-export function nextSymbol(board: Board): Symbol {
-  const xCount = board.filter((cell) => cell === 'X').length;
-  const oCount = board.filter((cell) => cell === 'O').length;
-  return xCount <= oCount ? 'X' : 'O';
-}
-
 /** Returns a new board with the move applied. Throws on an invalid move. */
 export function applyMove(board: Board, move: Move, symbol: Symbol): Board {
   if (!Number.isInteger(move) || move < 0 || move > 8) {

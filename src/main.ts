@@ -1,10 +1,17 @@
 import './ui/styles.css';
-import { createBoard } from './game/board';
-import { renderBoard } from './ui/boardView';
+import { showGameScreen } from './ui/gameScreen';
+import { showStartScreen } from './ui/startScreen';
+import { loadSettings, saveSettings } from './ui/storage';
 
 const app = document.getElementById('app')!;
-const boardEl = document.createElement('div');
-app.appendChild(boardEl);
+let settings = loadSettings();
 
-// Milestone 1: just draw an empty board. Game flow arrives in later milestones.
-renderBoard(boardEl, createBoard(), () => {});
+function showMenu(): void {
+  showStartScreen(app, settings, (chosen) => {
+    settings = chosen;
+    saveSettings(settings);
+    showGameScreen(app, settings, showMenu);
+  });
+}
+
+showMenu();
