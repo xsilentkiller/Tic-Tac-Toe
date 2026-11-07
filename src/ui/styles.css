@@ -1,23 +1,67 @@
+/* Colors live in variables; dark mode just swaps them (follows the system setting). */
+:root {
+  color-scheme: light dark;
+  --bg: #f4f4f8;
+  --surface: #ffffff;
+  --text: #222222;
+  --muted: #555555;
+  --border: #bbbbbb;
+  --accent: #4a5ce8;
+  --on-accent: #ffffff;
+  --x: #d6336c;
+  --o: #1c7ed6;
+  --win: #fff3bf;
+  --shadow: rgba(0, 0, 0, 0.15);
+  --focus: #f5a623;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14151c;
+    --surface: #23252f;
+    --text: #ececf1;
+    --muted: #a0a3b1;
+    --border: #454859;
+    --accent: #6c7bff;
+    --on-accent: #101120;
+    --x: #ff6b9d;
+    --o: #5cb0ff;
+    --win: #4a4220;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --focus: #ffc857;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   font-family: system-ui, sans-serif;
-  background: #f4f4f8;
-  color: #222;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
 }
 
 .screen {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 16px;
+  min-height: 100dvh;
   padding: 24px 16px;
   max-width: 420px;
   margin: 0 auto;
+  animation: fade-in 0.25s ease-out;
 }
 
 h1 {
@@ -31,34 +75,68 @@ h1 {
   font-size: 1.1rem;
 }
 
-button {
+.scoreboard {
+  margin: 0;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Buttons and form controls ---- */
+button,
+select {
   font: inherit;
   cursor: pointer;
+  touch-action: manipulation; /* no double-tap zoom delay */
+  user-select: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
 
 .primary {
   padding: 12px 24px;
   border: none;
   border-radius: 10px;
-  background: #4a5ce8;
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
   font-weight: 600;
 }
 
 .controls {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
 }
 
-.controls button:not(.primary) {
+.controls button:not(.primary),
+select {
   padding: 12px 24px;
-  border: 1px solid #bbb;
+  border: 1px solid var(--border);
   border-radius: 10px;
-  background: #fff;
+  background: var(--surface);
   color: inherit;
 }
 
-/* Segmented control built from radio buttons */
+select {
+  padding: 12px;
+}
+
+/* At least 48px tall: comfortable for thumbs */
+.primary,
+.controls button,
+.controls select,
+.segment span {
+  min-height: 48px;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* ---- Segmented control built from radio buttons ---- */
 .segmented {
   border: none;
   padding: 0;
@@ -74,7 +152,7 @@ button {
 
 .segments {
   display: flex;
-  border: 1px solid #bbb;
+  border: 1px solid var(--border);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -83,7 +161,9 @@ button {
   flex: 1;
   position: relative;
   text-align: center;
-  background: #fff;
+  background: var(--surface);
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .segment input {
@@ -94,53 +174,20 @@ button {
 }
 
 .segment span {
-  display: block;
+  display: grid;
+  place-items: center;
   padding: 12px 8px;
+  transition: background 0.15s, color 0.15s;
 }
 
 .segment input:checked + span {
-  background: #4a5ce8;
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .segment input:focus-visible + span {
-  outline: 3px solid #f5a623;
+  outline: 3px solid var(--focus);
   outline-offset: -3px;
-}
-
-.segment input:disabled + span {
-  opacity: 0.4;
-}
-
-/* Board */
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  width: min(90vw, 360px);
-  aspect-ratio: 1;
-}
-
-.cell {
-  font-size: clamp(2rem, 14vw, 4rem);
-  font-weight: 700;
-  border: none;
-  border-radius: 12px;
-  background: #fff;
-  color: inherit;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-}
-
-.cell.x {
-  color: #d6336c;
-}
-
-.cell.o {
-  color: #1c7ed6;
-}
-
-.cell.win {
-  background: #fff3bf;
 }
 
 .options {
@@ -154,92 +201,97 @@ button {
   display: none;
 }
 
+/* ---- Board ---- */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: min(90vw, 360px);
+  aspect-ratio: 1;
+}
+
+.cell {
+  font-size: clamp(2rem, 14vw, 4rem);
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 4px var(--shadow);
+  touch-action: manipulation;
+  transition: background 0.2s;
+}
+
+.cell.x {
+  color: var(--x);
+}
+
+.cell.o {
+  color: var(--o);
+}
+
+.cell.placed {
+  animation: pop 0.2s ease-out;
+}
+
+.cell.win {
+  background: var(--win);
+  animation: win-pulse 0.6s ease-in-out 2;
+}
+
 .board.locked .cell {
   cursor: progress;
 }
 
-.scoreboard {
-  margin: 0;
-  color: #555;
-  font-variant-numeric: tabular-nums;
-}
-
-select {
-  font: inherit;
-  padding: 12px;
-  border: 1px solid #bbb;
-  border-radius: 10px;
-  background: #fff;
-  color: inherit;
-}
-
+/* ---- Dialog ---- */
 .dialog {
   border: none;
   border-radius: 14px;
   padding: 20px;
   max-width: 320px;
-  background: #fff;
-  color: #222;
+  background: var(--surface);
+  color: var(--text);
 }
 
 .dialog::backdrop {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .dialog .controls {
   justify-content: flex-end;
 }
 
-/* ---- Touch-friendly, responsive layout ---- */
-html {
-  -webkit-text-size-adjust: 100%;
+/* ---- Animations ---- */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
-body {
-  min-height: 100dvh;
-  -webkit-tap-highlight-color: transparent;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
-    env(safe-area-inset-left);
+@keyframes pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
 }
 
-button,
-select,
-.segment {
-  touch-action: manipulation; /* no double-tap zoom delay */
-  user-select: none;
+@keyframes win-pulse {
+  50% {
+    transform: scale(1.08);
+  }
 }
 
-/* At least 48px tall: comfortable for thumbs */
-.primary,
-.controls button,
-.controls select,
-.segment span {
-  min-height: 48px;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
-.segment span {
-  display: grid;
-  place-items: center;
-}
-
-.controls {
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.cell {
-  touch-action: manipulation;
-}
-
-.cell:active:not(:disabled) {
-  transform: scale(0.97);
-}
-
-.screen {
-  min-height: 100dvh;
-  justify-content: center;
-}
-
+/* ---- Small screens ---- */
 @media (max-width: 380px) {
   .screen {
     padding: 16px 12px;
