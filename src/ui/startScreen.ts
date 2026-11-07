@@ -48,7 +48,12 @@ export function showStartScreen(
       (value) => (settings.firstMover = value),
     ),
   );
-  cpuOptions.hidden = settings.mode !== 'cpu';
+  // Hide with visibility (not display) so the layout keeps its size and nothing jumps.
+  function setCpuOptionsVisible(visible: boolean): void {
+    cpuOptions.classList.toggle('invisible', !visible);
+    cpuOptions.inert = !visible; // not focusable or clickable while hidden
+  }
+  setCpuOptionsVisible(settings.mode === 'cpu');
 
   screen.append(
     segmented<GameMode>(
@@ -61,7 +66,7 @@ export function showStartScreen(
       settings.mode,
       (mode) => {
         settings.mode = mode;
-        cpuOptions.hidden = mode !== 'cpu';
+        setCpuOptionsVisible(mode === 'cpu');
       },
     ),
     cpuOptions,
